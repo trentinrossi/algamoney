@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,12 +38,14 @@ public class CategoriaResource {
 	// Estou dizendo aqui que este método quando acessado
 	// http://MEUSERVER:8080/categorias usando GET vai chamar por padrão este método
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
 	public List<Categoria> listar() {
 		return repositorio.findAll();
 	}
 
 	// Caso seja acessado como GET em http://MEUSERVER:8080/categorias/metodo2
 	@GetMapping("/metodo2")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
 	public List<Categoria> listar2() {
 		return repositorio.findAll();
 	}
@@ -52,6 +55,7 @@ public class CategoriaResource {
 	// Mapeando este método quando chamado o POST e dizendo que a resposta será
 	// 201:CREATED
 	// @PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void criar(@RequestBody Categoria categoria) {
 		repositorio.save(categoria);
@@ -64,6 +68,7 @@ public class CategoriaResource {
 	// Não precisa mais do @ResponseStatus pois o return está colocando
 	@PostMapping
 	// @ResponseStatus(HttpStatus.CREATED)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_CATEGORIA') and #oauth2.hasScope('write')")
 	public ResponseEntity<Categoria> criar2(@Valid @RequestBody Categoria categoria, HttpServletResponse response) {
 		Categoria catSalva = repositorio.save(categoria);
 
@@ -80,6 +85,7 @@ public class CategoriaResource {
 
 	// Retorna a categoria conforme o código q foi passado
 	// Trata caso o codigo informado nao seja encontrado no banco
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_CATEGORIA') and #oauth2.hasScope('read')")
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Categoria> buscarPeloCodigo(@PathVariable Long codigo) {
 		if (repositorio.findOne(codigo) == null) {
