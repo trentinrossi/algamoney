@@ -96,7 +96,7 @@ public class CategoriaResource {
 	}
 
 	@DeleteMapping("/{codigo}")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.NO_CONTENT)	
 	public void deletar(@PathVariable Long codigo) {
 		repositorio.delete(codigo);
 	}
