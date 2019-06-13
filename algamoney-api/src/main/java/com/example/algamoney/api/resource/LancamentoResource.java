@@ -30,6 +30,7 @@ import com.example.algamoney.api.exceptions.AlgamoneyExceptionHandler.Erro;
 import com.example.algamoney.api.model.Lancamento;
 import com.example.algamoney.api.repository.LancamentoRepository;
 import com.example.algamoney.api.repository.filter.LancamentoFilter;
+import com.example.algamoney.api.repository.projection.ResumoLancamento;
 import com.example.algamoney.api.service.LancamentoService;
 import com.example.algamoney.api.service.exception.PessoaInexistenteOuInativaException;
 
@@ -60,6 +61,13 @@ public class LancamentoResource {
 		return repository.filtrar(lancamentoFilter, pageable);
 	}
 
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public Page<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter, Pageable pageable) {
+		return repository.resumir(lancamentoFilter, pageable);
+	}
+
+	
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	@GetMapping("/{codigo}")
 	public ResponseEntity<Lancamento> retornaPeloCodigo(@PathVariable Long codigo) {
