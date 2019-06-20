@@ -21,9 +21,7 @@ public class BasicSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-		
-		System.out.println("auth: "+auth);
+		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());	
 	}
 	
 	@Bean
